@@ -6,7 +6,7 @@
 
 <script>
 import initMap from './src/map';
-import data from './src/demoData.json';
+import data from './data.json';
 export default {
   name: 'HelloWorld',
   props: {
@@ -15,14 +15,15 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       initMap('guard-map', {
-        guardData :data
+        guardList :data.data.province,
+        guardNum: data.data.num
         });
     });
   },
   methods: {
 
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
