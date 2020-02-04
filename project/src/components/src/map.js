@@ -9,7 +9,7 @@
  * 3.3.    更新：热度地图的数字和颜色，希望可以实时更新（2秒钟1次）
  */
 import echarts from 'echarts';
-import chinaMap from './lib/chinaMap.json';
+import chinaJson from './lib/china.json';
 
 /**
  * @param {string} elementId 地图容器元素id
@@ -19,22 +19,20 @@ export default (elementId, {
 	guardList,
 	guardNum
 }) => {
-	const guardListSort = guardList.slice(0).sort((a, b) => a.num - b.num);
+	const overseasIndex = guardList.map(item => item.id).indexOf('999');
+	guardList.splice(overseasIndex, 1);
+	const guardListSort = guardList.sort((a, b) => a.num - b.num);
 	const guardListMapData = guardListSort.map((item, index) => {
-			let {
-				num,
-				display
-			} = item;
-			return {
-				name: item.title,
-				value: index,
-				num,
-				display
-			};
-		});
-
-	console.log({
-		guardListMapData
+		let {
+			num,
+			display
+		} = item;
+		return {
+			name: item.title,
+			value: index,
+			num,
+			display
+		};
 	});
 
 	const backgroundColor = '#931b00';
@@ -53,10 +51,6 @@ export default (elementId, {
 
 	let splitListMap = rate.map(r => Math.round(r * guardNum));
 
-	console.log({
-		splitListMap
-	});
-
 	const getColor = num => {
 		let i = 0;
 		while (num > splitListMap[i]) {
@@ -73,14 +67,6 @@ export default (elementId, {
 	 * label：图例名称
 	 * color：自定义颜色值
 	 */
-	// const splitList = colors.map((color, index) => {
-	// 	return {
-	// 		color,
-	// 		start: splitListMap[index],
-	// 		end: splitListMap[index + 1]
-	// 	};
-	// });
-
 	const splitList = guardListMapData.map((item, index) => {
 		return {
 			label: item.name,
@@ -90,43 +76,9 @@ export default (elementId, {
 		};
 	});
 
-	console.log({
-		splitList
-	});
-
-	const el = document.getElementById(elementId);
-
-	// 地图实例
-	let echart = echarts.init(el);
-
-	// 初始化绘制全国地图配置
-	let option = {
-		backgroundColor,
-		title: {
-			text: '全国守护地图',
-			show: false,
-			top: 15
-		},
-		// TODO: [右侧区间部分的控制]核心地图
-		visualMap: {
-			min: 10,
-			splitNumber: 34,
-			// color: [
-			// 	'#f40000',
-			// 	'#fc5a22',
-			// 	'#ffae00',
-			// 	'#ffc557',
-			// 	'#ffe280'
-			// ],
-			textStyle: {
-				color: '#fff'
-			}
-		}
-	};
-
-	function renderMap(mapName, data) {
+	const renderMap = (mapName, data) => {
 		let isLabelShow = true;
-		let tooltip = {
+		const tooltip = {
 			show: true,
 			trigger: 'item',
 			triggerOn: 'click',
@@ -144,68 +96,79 @@ export default (elementId, {
 			}
 		};
 
-		// option.visualMap.pieces = pieces;
-		option.tooltip = tooltip;
-		option.series = [{
-			name: mapName,
-			type: 'map',
-			mapType: mapName,
-			roam: false,
-			nameMap: {
-				'china': '中国'
-			},
-			label: {
-				normal: {
-					show: isLabelShow,
-					textStyle: {
-						color: '#200600',
-						fontSize: 13
-					}
-				},
-				// 高亮时候
-				emphasis: {
-					show: true,
-					textStyle: {
-						color: '#200600',
-						fontSize: 13
-					}
-				}
-			},
-			itemStyle: {
-				normal: {
-					borderColor: '#801800',
-					borderWidth: 1,
-					areaColor2: {
-						colorStops: [{
-							offset: 0.2,
-							// 0% 处的颜色
-							color: '#ffe280'
-						}, {
-							offset: 1,
-							// 100% 处的颜色
-							color: '#ffc557'
-						}],
-						// 缺省为 false
-						globalCoord: false
-					}
-				},
-				emphasis: {
-					areaColor: '#20dafc',
-					borderWidth: 0
-				}
-			},
-			data,
-			dataRange: {
-				splitList
-			}
-		}];
+		const el = document.getElementById(elementId);
+
+		// 地图实例
+		let echart = echarts.init(el);
 
 		echart.clear();
-		echart.setOption(option);
+
+		const mapOption = {
+			backgroundColor,
+			title: {
+				text: '全国守护地图',
+				show: false
+			},
+			visualMap: {
+				color: [
+					'#f40000',
+					'#fc5a22',
+					'#ffae00',
+					'#ffc557',
+					'#ffe280'
+				],
+				textStyle: {
+					color: '#fff'
+				}
+			},
+			series: [{
+				type: 'map',
+				mapType: 'china',
+				label: {
+					normal: {
+						show: isLabelShow,
+						textStyle: {
+							color: '#200600',
+							fontSize: 12
+						}
+					},
+					// 高亮时候
+					emphasis: {
+						show: true,
+						textStyle: {
+							color: '#200600',
+							fontSize: 12
+						}
+					}
+				},
+				itemStyle: {
+					normal: {
+						borderColor: '#801800',
+						borderWidth: 1,
+						areaColor: '#ffe280'
+					},
+					emphasis: {
+						areaColor: '#20dafc',
+						borderWidth: 0
+					}
+				},
+				data
+			}],
+			dataRange: {
+				// 图例横轴位置
+				x: '-1000 px',
+				// 图例纵轴位置
+				y: '-1000 px',
+				splitList
+			},
+			tooltip
+		};
+
+		echart.setOption(mapOption);
 	}
 
 	// 注册地图
-	echarts.registerMap('china', chinaMap);
+	echarts.registerMap('china', chinaJson);
 
 	// 绘制地图
 	renderMap('china', guardListMapData);
