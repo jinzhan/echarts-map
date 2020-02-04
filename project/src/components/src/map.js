@@ -11,10 +11,6 @@
 import echarts from 'echarts';
 import chinaJson from './lib/china';
 
-/**
- * @param {string} elementId 地图容器元素id
- * @param {string} guardData 守护数据
- */
 export default (elementId, {
 	guardList,
 	guardNum,
@@ -150,7 +146,7 @@ export default (elementId, {
 					}
 				},
 				aspectScale: 0.75,
-                zoom: 1.2,
+				zoom: 1.2,
 				data
 			}],
 			dataRange: {
