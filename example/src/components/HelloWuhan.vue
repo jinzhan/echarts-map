@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import initMap from 'guard-map';
+import initMap from './map';
 import data from './data.json';
 export default {
   name: 'HelloWorld',
@@ -25,7 +25,7 @@ export default {
           guardList: data.data.province,
           guardNum: data.data.num * 10
         });
-      }, 2000);
+      }, 20000);
     });
   },
   methods: {
