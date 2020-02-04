@@ -8,7 +8,7 @@
 import initMap from './map';
 import data from './data.json';
 export default {
-  name: 'HelloWorld',
+  name: 'HelloWuhan',
   props: {
     msg: String
   },

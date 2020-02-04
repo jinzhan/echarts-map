@@ -8,7 +8,13 @@
  * 3.2.2.    数字的省略规则：小于1万显示数字，大于1万显示XX.X万（小数点后1位）
  * 3.3.    更新：热度地图的数字和颜色，希望可以实时更新（2秒钟1次）
  */
-import echarts from 'echarts';
+
+import echarts from 'echarts/lib/echarts';
+import 'echarts/lib/chart/map';
+// import 'echarts/lib/component/geo';
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/visualMap';
+
 import chinaJson from 'echarts/map/json/china.json';
 
 class ChinaMap {
