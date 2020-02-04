@@ -29,11 +29,32 @@ class ChinaMap {
 			backgroundColor
 		};
 
+		const el = document.getElementById(elementId);
+
+		// 地图实例
+		let echart = echarts.init(el);
+		this.echart = echart;
+		this.update({
+			guardNum,
+			guardList
+		});
+	}
+
+	/**
+	 * 
+	 * @param {number} guardNum 总数
+	 * @param {Array} guardList 各个省份数量
+	 */
+	update({
+		guardNum,
+		guardList
+	}) {
 		this.createData({
 			guardNum,
 			guardList
 		});
-		this.render(elementId);
+		this.echart.clear();
+		this.render();
 	}
 
 	createData({
@@ -97,7 +118,13 @@ class ChinaMap {
 		this.guardListMapData = guardListMapData;
 	}
 
-	render(elementId) {
+	// 清除地图
+	clear() {
+		this.echart.clear();
+	}
+
+	render() {
+		const echart = this.echart;
 		let isLabelShow = true;
 		const backgroundColor = this.options.backgroundColor;
 		const tooltip = {
@@ -118,13 +145,6 @@ class ChinaMap {
 							守护数：${displayNum}`;
 			}
 		};
-
-		const el = document.getElementById(elementId);
-
-		// 地图实例
-		let echart = echarts.init(el);
-
-		echart.clear();
 
 		const mapOption = {
 			backgroundColor,
@@ -188,7 +208,6 @@ class ChinaMap {
 			},
 			tooltip
 		};
-
 		echart.setOption(mapOption);
 	}
 };
@@ -198,7 +217,7 @@ export default (elementId, {
 	guardNum,
 	backgroundColor
 }) => {
-	new ChinaMap(elementId, {
+	return new ChinaMap(elementId, {
 		guardList,
 		guardNum,
 		backgroundColor

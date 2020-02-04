@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import initMap from './src/map';
+import initMap from 'guard-map';
 import data from './data.json';
 export default {
   name: 'HelloWorld',
@@ -14,11 +14,18 @@ export default {
   },
   mounted: function() {
     this.$nextTick(function() {
-      initMap('guard-map', {
+      const map = initMap('guard-map', {
         backgroundColor: '#931b00',
         guardList: data.data.province,
         guardNum: data.data.num
         });
+
+      setTimeout(() => {
+        map.update({
+          guardList: data.data.province,
+          guardNum: data.data.num * 10
+        });
+      }, 2000);
     });
   },
   methods: {

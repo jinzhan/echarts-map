@@ -1,0 +1,37 @@
+{
+  "name": "guard-map",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "example"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jinzhan/echarts-map.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jinzhan/echarts-map/issues"
+  },
+  "homepage": "https://github.com/jinzhan/echarts-map#readme",
+  "dependencies": {
+    "echarts": "^4.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-latest": "^6.24.1",
+    "rollup": "^1.6.0",
+    "rollup-plugin-babel": "^4.3.3"
+  }
+}
