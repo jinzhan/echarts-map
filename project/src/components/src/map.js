@@ -9,7 +9,7 @@
  * 3.3.    更新：热度地图的数字和颜色，希望可以实时更新（2秒钟1次）
  */
 import echarts from 'echarts';
-import chinaJson from './lib/china.json';
+import chinaJson from './lib/china';
 
 /**
  * @param {string} elementId 地图容器元素id
@@ -141,7 +141,7 @@ export default (elementId, {
 				itemStyle: {
 					normal: {
 						borderColor: '#801800',
-						borderWidth: 1,
+						borderWidth: 0.5,
 						areaColor: '#ffe280'
 					},
 					emphasis: {
