@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/jinzhan/echarts-map#readme",
   "dependencies": {
-    "echarts": "^4.6.0"
+    "echarts": "^4.6.0",
+    "rollup-plugin-uglify": "^6.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
