@@ -19,9 +19,7 @@ export default (elementId, {
 	guardList,
 	guardNum
 }) => {
-	const overseasIndex = guardList.map(item => item.id).indexOf('999');
-	guardList.splice(overseasIndex, 1);
-	const guardListSort = guardList.sort((a, b) => a.num - b.num);
+	const guardListSort = guardList.slice(0).sort((a, b) => a.num - b.num);
 	const guardListMapData = guardListSort.map((item, index) => {
 		let {
 			num,
@@ -152,6 +150,8 @@ export default (elementId, {
 						borderWidth: 0
 					}
 				},
+				aspectScale: 0.75,
+                zoom: 1.2,
 				data
 			}],
 			dataRange: {
