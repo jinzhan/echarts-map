@@ -11,66 +11,95 @@
 import echarts from 'echarts';
 import chinaJson from './lib/china';
 
-export default (elementId, {
-	guardList,
-	guardNum,
-	backgroundColor
-}) => {
-	const guardListSort = guardList.slice(0).sort((a, b) => a.num - b.num);
-	const guardListMapData = guardListSort.map((item, index) => {
-		let {
-			num,
-			display
-		} = item;
-		return {
-			name: item.title,
-			value: index,
-			num,
-			display
-		};
-	});
-
-	// 地图区域色值
-	const colors = [
-		'#ffe280',
-		'#ffc557',
-		'#ffae00',
-		'#fc5a22',
-		'#f40000'
-	];
-
-	// 各省的参与数占总数的占比：1级<1%; 2级1~2%; 3级2~5%; 4级5~8%;5级>8%
-	let rate = [0.01, 0.02, 0.05, 0.08, 1];
-
-	let splitListMap = rate.map(r => Math.round(r * guardNum));
-
-	const getColor = num => {
-		let i = 0;
-		while (num > splitListMap[i]) {
-			i = i + 1;
-		}
-		return colors[i];
-	};
-
+class ChinaMap {
 	/**
-	 * 各省地图颜色
-	 * 
-	 * start：值域开始值
-	 * end：值域结束值
-	 * label：图例名称
-	 * color：自定义颜色值
+	 * @param {string} elementId 地图容器元素id
+	 * @param {string} guardData 守护数据
 	 */
-	const splitList = guardListMapData.map((item, index) => {
-		return {
-			label: item.name,
-			color: getColor(item.num),
-			start: item.value,
-			end: item.value
+	constructor(elementId, {
+		guardNum,
+		guardList,
+		backgroundColor
+	}) {
+		// 注册地图
+		echarts.registerMap('china', chinaJson);
+		this.options = {
+			guardList,
+			guardNum,
+			backgroundColor
 		};
-	});
 
-	const renderMap = (mapName, data) => {
+		this.createData({
+			guardNum,
+			guardList
+		});
+		this.render(elementId);
+	}
+
+	createData({
+		guardNum,
+		guardList
+	}) {
+		const guardListSort = guardList.slice(0).sort((a, b) => a.num - b.num);
+		const guardListMapData = guardListSort.map((item, index) => {
+			let {
+				num,
+				display
+			} = item;
+			return {
+				name: item.title,
+				value: index,
+				num,
+				display
+			};
+		});
+
+		// 地图区域色值
+		const colors = [
+			'#ffe280',
+			'#ffc557',
+			'#ffae00',
+			'#fc5a22',
+			'#f40000'
+		];
+
+		// 各省的参与数占总数的占比：1级<1%; 2级1~2%; 3级2~5%; 4级5~8%;5级>8%
+		let rate = [0.01, 0.02, 0.05, 0.08, 1];
+
+		let splitListMap = rate.map(r => Math.round(r * guardNum));
+
+		const getColor = num => {
+			let i = 0;
+			while (num > splitListMap[i]) {
+				i = i + 1;
+			}
+			return colors[i];
+		};
+
+		/**
+		 * 各省地图颜色
+		 * 
+		 * start：值域开始值
+		 * end：值域结束值
+		 * label：图例名称
+		 * color：自定义颜色值
+		 */
+		const splitList = guardListMapData.map((item, index) => {
+			return {
+				label: item.name,
+				color: getColor(item.num),
+				start: item.value,
+				end: item.value
+			};
+		});
+
+		this.splitList = splitList;
+		this.guardListMapData = guardListMapData;
+	}
+
+	render(elementId) {
 		let isLabelShow = true;
+		const backgroundColor = this.options.backgroundColor;
 		const tooltip = {
 			show: true,
 			trigger: 'item',
@@ -80,12 +109,13 @@ export default (elementId, {
 				color: '#ffcf62',
 				align: 'left'
 			},
-			formatter(params) {
+			formatter: params => {
+				const guardListMapData = this.guardListMapData;
 				let name = params.name;
 				let item = guardListMapData.filter(item => item.name == name)[0];
 				let displayNum = item.display;
 				return `${params.name}<br/>
-						守护数：${displayNum}`;
+							守护数：${displayNum}`;
 			}
 		};
 
@@ -147,24 +177,30 @@ export default (elementId, {
 				},
 				aspectScale: 0.75,
 				zoom: 1.2,
-				data
+				data: this.guardListMapData
 			}],
 			dataRange: {
 				// 图例横轴位置
 				x: '-1000 px',
 				// 图例纵轴位置
 				y: '-1000 px',
-				splitList
+				splitList: this.splitList
 			},
 			tooltip
 		};
 
 		echart.setOption(mapOption);
 	}
+};
 
-	// 注册地图
-	echarts.registerMap('china', chinaJson);
-
-	// 绘制地图
-	renderMap('china', guardListMapData);
+export default (elementId, {
+	guardList,
+	guardNum,
+	backgroundColor
+}) => {
+	new ChinaMap(elementId, {
+		guardList,
+		guardNum,
+		backgroundColor
+	});
 };
