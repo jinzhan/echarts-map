@@ -17,7 +17,8 @@ import chinaJson from './lib/china.json';
  */
 export default (elementId, {
 	guardList,
-	guardNum
+	guardNum,
+	backgroundColor
 }) => {
 	const guardListSort = guardList.slice(0).sort((a, b) => a.num - b.num);
 	const guardListMapData = guardListSort.map((item, index) => {
@@ -32,8 +33,6 @@ export default (elementId, {
 			display
 		};
 	});
-
-	const backgroundColor = '#931b00';
 
 	// 地图区域色值
 	const colors = [

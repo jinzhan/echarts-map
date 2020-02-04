@@ -15,7 +15,8 @@ export default {
   mounted: function() {
     this.$nextTick(function() {
       initMap('guard-map', {
-        guardList :data.data.province,
+        backgroundColor: '#931b00',
+        guardList: data.data.province,
         guardNum: data.data.num
         });
     });
