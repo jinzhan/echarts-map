@@ -1,5 +1,5 @@
 /**
- * @file 地图图标
+ * @file 活动守护地图
  * 
  * 3.1.    色块：按省级展示区域数据，从弱到强分5级颜色，计算颜色规则为
  * 3.1.1.    各省的参与数占总数的占比：1级<1%; 2级1~2%; 3级2~5%; 4级5~8%;5级>8%
@@ -8,11 +8,13 @@
  * 3.2.2.    数字的省略规则：小于1万显示数字，大于1万显示XX.X万（小数点后1位）
  * 3.3.    更新：热度地图的数字和颜色，希望可以实时更新（2秒钟1次）
  */
+
 import echarts from 'echarts/lib/echarts';
 import 'echarts/lib/chart/map';
 // import 'echarts/lib/component/geo';
 import 'echarts/lib/component/tooltip';
 import 'echarts/lib/component/visualMap';
+
 import chinaJson from 'echarts/map/json/china.json';
 
 class ChinaMap {
@@ -36,12 +38,44 @@ class ChinaMap {
 		const el = document.getElementById(elementId);
 
 		// 地图实例
-		let echart = echarts.init(el);
+		const echart = echarts.init(el);
 		this.echart = echart;
+		this.lastClickItem = {};
 		this.update({
 			guardNum,
 			guardList
 		});
+
+		echart.on('click', params => {
+			console.log({params});
+				const {name, event} = params;
+				const index = params.dataIndex;
+				const {seriesName, dataIndex} = this.lastClickItem;
+				if (seriesName && seriesName !== name) {
+					this.echart.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						seriesName,
+						dataIndex
+					});
+				}
+
+				this.echart.dispatchAction({
+					type: 'highlight',
+					seriesIndex: 0,
+					seriesName: name,
+					dataIndex: index
+				});
+
+				// 记录上一次tooltip的位置
+				this.lastClickItem = {
+					seriesName: name,
+					dataIndex: index,
+					x: event.offsetX,
+					y: event.offsetY
+				};
+			});
+        
 	}
 
 	/**
@@ -59,6 +93,25 @@ class ChinaMap {
 		});
 		this.echart.clear();
 		this.render();
+
+		const {seriesName, dataIndex, x, y} = this.lastClickItem;
+		if (seriesName) {
+			this.echart.dispatchAction({
+				type: 'highlight',
+				seriesIndex: 0,
+				seriesName,
+				dataIndex
+			});
+
+			this.echart.dispatchAction({
+				type: 'showTip',
+				x,
+				y,
+				seriesIndex: 0,
+				dataIndex,
+				// position: [0, 0] // ['50%', '50%']
+			});
+		}
 	}
 
 	createData({
