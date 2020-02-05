@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import initMap from './map';
+import initMap from 'guard-map';
 import data from './data.json';
 export default {
   name: 'HelloWuhan',

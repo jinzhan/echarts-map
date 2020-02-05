@@ -2,3 +2,8 @@ node-modules
 example
 docs
 rollup.config.js
+.babelrc
+.eslintrc.js
+babel.config.js
+README.md
+webpack.config.js

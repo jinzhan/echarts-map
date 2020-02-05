@@ -10,7 +10,7 @@
   "dependencies": {
     "core-js": "^3.4.4",
     "echarts": "^4.6.0",
-    "guard-map": "0.0.0-beta",
+    "guard-map": "0.0.3",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -32,9 +32,16 @@
       "eslint:recommended"
     ],
     "rules": {
+      "no-empty": 0,
+      "no-undef": 0,
       "no-console": 0,
-      "no-unused-vars": 0,
       "no-extra-semi": 0,
+      "no-cond-assign": 0,
+      "no-self-assign": 0,
+      "no-unused-vars": 0,
+      "no-fallthrough": 0,
+      "no-useless-escape": 0,
+      "no-constant-condition": 0,
       "no-mixed-spaces-and-tabs": 0
     },
     "parserOptions": {

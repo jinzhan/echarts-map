@@ -1,7 +1,7 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import babel from "rollup-plugin-babel";
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import babel from "rollup-plugin-babel";
 import { uglify } from "rollup-plugin-uglify";
 // import { terser } from 'rollup-plugin-terser';
 // import { eslint } from 'rollup-plugin-eslint';
@@ -10,20 +10,21 @@ const version = require('./package.json').version;
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const banner =
-  '/*!\n' +
-  ` * guard-map.js v${version}\n` +
-  ` * (c) 2014-${new Date().getFullYear()} Steinitz\n` +
-  ' * Released under the MIT License.\n' +
-  ' */';
+const banner = `/*
+* guard-map.js v${version}
+* (c) 2019-${new Date().getFullYear()} Steinitz
+* Released under the MIT License.
+*/`;
 
 export default [
 	{
     input: 'src/main.js',
-    // external: ['echarts'],
+    external: ['echarts'],
 		output: {
-			file: 'dist/index.js',
-      format: 'cjs'
+      name: 'guardMap',
+      file: 'dist/bundle.js',
+      format: 'umd',
+      banner
 		},
 		plugins: [
       json(),
